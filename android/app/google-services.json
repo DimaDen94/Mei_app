@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "803971496597",
+    "firebase_url": "https://mei-app-flutter.firebaseio.com",
+    "project_id": "mei-app-flutter",
+    "storage_bucket": "mei-app-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803971496597:android:7d5993a81d683cc1",
+        "android_client_info": {
+          "package_name": "com.dmitrydlj.mei_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "803971496597-3hlg1soak35n5n24r05eori3rpvnm7ak.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_uwwLxqgFPZqlmyNsMjFn8VRKhZREUPY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "803971496597-3hlg1soak35n5n24r05eori3rpvnm7ak.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
