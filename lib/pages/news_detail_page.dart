@@ -4,9 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'dart:async';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
@@ -40,17 +37,18 @@ class _NewsDetailsState extends State<NewsDetails> {
       Factory(() => EagerGestureRecognizer()),
     ].toSet();
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
-      ),
-      body: new Padding(padding: EdgeInsets.fromLTRB(
-          6.0, 0.0, 6.0, 0.0), child: new SingleChildScrollView(
-        child: new Center(
-          child: new Html(data: data),
-          //child: new Text(data),
+        appBar: new AppBar(
+          title: new Text(widget.title),
         ),
-      ),)
-    );
+        body: new Padding(
+          padding: EdgeInsets.fromLTRB(6.0, 0.0, 6.0, 0.0),
+          child: new SingleChildScrollView(
+            child: new Center(
+              child: new Html(data: data),
+              //child: new Text(data),
+            ),
+          ),
+        ));
   }
 
   Future<String> _parseHtmlString(String url) async {
@@ -58,12 +56,22 @@ class _NewsDetailsState extends State<NewsDetails> {
 
     if (response.statusCode == 200) {
       dom.Document document = parser.parse(response.body);
-      String toCut = document.getElementById('breadcrumb').innerHtml;
-      //String toCut2 = document.getElementsByClassName('h1.ms-rteElement-H1').first.innerHtml;
+
+      dom.Element mainElement = document.getElementById('WebPartWPQ3');
+      data = mainElement.innerHtml;
+
+      dom.Element elementToCut = document.getElementById('breadcrumb');
+      String toCut = elementToCut.innerHtml;
+
+      data = data.replaceFirst(toCut, "").replaceAll("<img src=\"/news/", "<img src=\"https://mpei.ru/news/").replaceAll("alt", "alt1");
+
+      List<dom.Element> toReplace = mainElement.getElementsByTagName('a');
+      for (int i = 0; i < toReplace.length; i++) {
+        data = data.replaceAll(toReplace[i].outerHtml, toReplace[i].text);
+      }
 
       setState(() {
-        data = document.getElementById('WebPartWPQ3').innerHtml;
-        data = data.replaceFirst(toCut, "").replaceAll("<img src=\"/news/", "<img src=\"https://mpei.ru/news/").replaceAll("alt", "alt1");
+          data =data;
       });
       return response.toString();
     } else

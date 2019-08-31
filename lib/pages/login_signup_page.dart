@@ -137,13 +137,13 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Verify your account"),
+          title: new Text("Подтвердите свой аккаунт"),
           backgroundColor: Colors.deepPurpleAccent,
           content:
-              new Text("Link to verify account has been sent to your email"),
+              new Text("Вам выслана ссылка на указанный емейл. Перейдите по ней, для завершения регистрации"),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("Dismiss"),
+              child: new Text("Понял"),
               onPressed: () {
                 _changeFormToLogin();
                 Navigator.of(context).pop();
@@ -223,10 +223,10 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white54),
             ),
-            hintText: 'Your email',
+            hintText: 'Email',
             prefixIcon: new Image.asset('assets/icons/customer.png',
                 scale: 2.2, width: 48.0, height: 48.0)),
-        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+        validator: (value) => value.isEmpty ? 'Email должен быть заполнен' : null,
         onSaved: (value) => _email = value.trim(),
       ),
     );
@@ -247,10 +247,10 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white54),
             ),
-            hintText: 'Your password',
+            hintText: 'Пароль',
             prefixIcon: new Image.asset('assets/icons/lock.png',
                 scale: 1.8, width: 48.0, height: 48.0)),
-        validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
+        validator: (value) => value.isEmpty ? 'Пароль должен быть заполнен' : null,
         onSaved: (value) => _password = value.trim(),
       ),
     );
@@ -261,7 +261,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         padding: EdgeInsets.only(top: 16.0),
         child: new Container(
             child: new Row(mainAxisSize: MainAxisSize.min, children: [
-              Text('— OR —',
+              Text('— или —',
                   style: new TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.w300,
@@ -276,7 +276,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         child: new Container(
             child: new Row(mainAxisSize: MainAxisSize.min, children: [
               new FlatButton(
-                child: new Text('Forgot details?',
+                child: new Text('Забыли пароль?',
                     style: new TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.w300,
@@ -285,12 +285,12 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
               ),
               new FlatButton(
                 child: _formMode == FormMode.LOGIN
-                    ? new Text('Create an account',
+                    ? new Text('Создать акаунт',
                         style: new TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.w300,
                             color: Colors.white60))
-                    : new Text('          Sign in          ',
+                    : new Text('          Войти          ',
                         style: new TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.w300,
@@ -315,7 +315,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
                 height: 24.0,
               ),
               FlatButton(
-                child: new Text('Continue with Facebook',
+                child: new Text('Войти через Facebook',
                     style: new TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w300,
@@ -343,17 +343,17 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           child: new Row(mainAxisSize: MainAxisSize.min, children: [
             new SizedBox(
               height: 50.0,
-              width: 180.0,
+              width: 210.0,
               child: new RaisedButton(
                 elevation: 5.0,
                 shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(30.0)),
                 color: Color(0xFFBD3C41),
                 child: _formMode == FormMode.LOGIN
-                    ? new Text('Login',
+                    ? new Text('Войти',
                         style:
                             new TextStyle(fontSize: 20.0, color: Colors.white))
-                    : new Text('Create account',
+                    : new Text('Создать аккаунт',
                         style:
                             new TextStyle(fontSize: 20.0, color: Colors.white)),
                 onPressed: _validateAndSubmit,
