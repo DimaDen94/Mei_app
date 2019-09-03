@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mei_app/services/authentication.dart';
+import 'package:validators/validators.dart';
+import 'package:validators/sanitizers.dart';
 
 class LoginSignUpPage extends StatefulWidget {
   LoginSignUpPage({this.auth, this.onSignedIn});
@@ -57,32 +59,49 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           _isLoading = false;
         });
 
-        if (userId.length > 0 &&
-            userId != null &&
-            _formMode == FormMode.LOGIN) {
-          widget.onSignedIn();
+        //if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN) {
+        if (userId != null ?? userId.length > 0 && _formMode == FormMode.LOGIN) {
+            widget.onSignedIn();
+        }else{
+          setState(() {
+            _isLoading = false;
+            if (_isIos) {
+              setState(() {
+                _isLoading = false;
+                _errorMessage = "ios Проверьте введенные данные";
+              });
+            } else
+              setState(() {
+                _isLoading = false;
+                _errorMessage = "андроид Проверьте введенные данные";
+              });
+          });
         }
       } catch (e) {
         print('Error: $e');
         setState(() {
           _isLoading = false;
           if (_isIos) {
-            _errorMessage = e.details;
+            _errorMessage = "Ошибка подключения ios";
           } else
-            _errorMessage = e.message;
+            _errorMessage = "Ошибка подключения андроид";
         });
       }
     }
   }
 
-  void _validateAndSubmitFB()  async{
+  void _validateAndSubmitFB() async {
     String userId = "";
     userId = await widget.auth.signUpWithFB();
     print('Signed up user: $userId');
-    if (userId.length > 0 &&
-        userId != null &&
-        _formMode == FormMode.LOGIN) {
-      widget.onSignedIn();
+    if (userId != null) {
+      if (userId.length > 0 && _formMode == FormMode.LOGIN) {
+        widget.onSignedIn();
+      }
+    } else {
+      setState(() {
+        _errorMessage = "Ошибка подключения к FB";
+      });
     }
   }
 
@@ -137,18 +156,17 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Verify your account"),
+          title: new Text("Подтвердите свой аккаунт"),
           backgroundColor: Colors.deepPurpleAccent,
-          content:
-              new Text("Link to verify account has been sent to your email"),
+          content: new Text(
+              "Вам выслана ссылка на указанный емейл. Перейдите по ней, для завершения регистрации"),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("Dismiss"),
+              child: new Text("Понял"),
               onPressed: () {
                 _changeFormToLogin();
                 Navigator.of(context).pop();
                 widget.onSignedIn();
-
               },
             ),
           ],
@@ -182,7 +200,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   }
 
   Widget _showErrorMessage() {
-    if (_errorMessage.length > 0 && _errorMessage != null) {
+    //if (_errorMessage.length > 0 && _errorMessage != null) {
+    if (_errorMessage != null && _errorMessage.length > 0) {
       return new Text(
         _errorMessage,
         style: TextStyle(
@@ -193,7 +212,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
       );
     } else {
       return new Container(
-        height: 0.0,
+        height: 1.0,
       );
     }
   }
@@ -223,10 +242,23 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white54),
             ),
-            hintText: 'Your email',
+            hintText: 'Email',
             prefixIcon: new Image.asset('assets/icons/customer.png',
                 scale: 2.2, width: 48.0, height: 48.0)),
-        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+        validator: (value) {
+          if (value.isEmpty) {
+            setState(() {
+              _isLoading = false;
+            });
+            return 'Email должен быть заполнен';
+          } else if (!isEmail(value)) {
+            setState(() {
+              _isLoading = false;
+            });
+            return 'Email введен некорректно';
+          } else
+            return null;
+        },
         onSaved: (value) => _email = value.trim(),
       ),
     );
@@ -247,10 +279,23 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white54),
             ),
-            hintText: 'Your password',
+            hintText: 'Пароль',
             prefixIcon: new Image.asset('assets/icons/lock.png',
                 scale: 1.8, width: 48.0, height: 48.0)),
-        validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
+        validator: (value) {
+          if (value.isEmpty) {
+            setState(() {
+              _isLoading = false;
+            });
+            return 'Пароль должен быть заполнен';
+          } else if (value.length < 6) {
+            setState(() {
+              _isLoading = false;
+            });
+            return 'Пароль должен быть не меньше 6 символов';
+          } else
+            return null;
+        },
         onSaved: (value) => _password = value.trim(),
       ),
     );
@@ -261,7 +306,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         padding: EdgeInsets.only(top: 16.0),
         child: new Container(
             child: new Row(mainAxisSize: MainAxisSize.min, children: [
-              Text('— OR —',
+              Text('— или —',
                   style: new TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.w300,
@@ -276,7 +321,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         child: new Container(
             child: new Row(mainAxisSize: MainAxisSize.min, children: [
               new FlatButton(
-                child: new Text('Forgot details?',
+                child: new Text('Забыли пароль?',
                     style: new TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.w300,
@@ -285,12 +330,12 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
               ),
               new FlatButton(
                 child: _formMode == FormMode.LOGIN
-                    ? new Text('Create an account',
+                    ? new Text('Создать акаунт',
                         style: new TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.w300,
                             color: Colors.white60))
-                    : new Text('          Sign in          ',
+                    : new Text('          Войти          ',
                         style: new TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.w300,
@@ -315,7 +360,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
                 height: 24.0,
               ),
               FlatButton(
-                child: new Text('Continue with Facebook',
+                child: new Text('Войти через Facebook',
                     style: new TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w300,
@@ -343,17 +388,17 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           child: new Row(mainAxisSize: MainAxisSize.min, children: [
             new SizedBox(
               height: 50.0,
-              width: 180.0,
+              width: 210.0,
               child: new RaisedButton(
                 elevation: 5.0,
                 shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(30.0)),
                 color: Color(0xFFBD3C41),
                 child: _formMode == FormMode.LOGIN
-                    ? new Text('Login',
+                    ? new Text('Войти',
                         style:
                             new TextStyle(fontSize: 20.0, color: Colors.white))
-                    : new Text('Create account',
+                    : new Text('Создать аккаунт',
                         style:
                             new TextStyle(fontSize: 20.0, color: Colors.white)),
                 onPressed: _validateAndSubmit,

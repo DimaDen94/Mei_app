@@ -56,17 +56,24 @@ class Auth implements BaseAuth {
 
   @override
   Future<String> signUpWithFB() async {
-    final facebookLoginResult = await fbLogin.logInWithReadPermissions(['email', 'public_profile']);
-    print(facebookLoginResult.toString());
-    FacebookAccessToken myToken = facebookLoginResult.accessToken;
-    print(myToken.toString());
+    final facebookLoginResult =
+        await fbLogin.logInWithReadPermissions(['email', 'public_profile']);
 
-    AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: myToken.token);
-    print(credential.toString());
+    if (facebookLoginResult.status == FacebookLoginStatus.loggedIn) {
+      print(facebookLoginResult.toString());
 
-    FirebaseUser firebaseUser = await FirebaseAuth.instance.signInWithCredential(credential);
-    print(firebaseUser.toString());
+      FacebookAccessToken myToken = facebookLoginResult.accessToken;
+      print(myToken.toString());
 
-    return firebaseUser.uid;
+      AuthCredential credential =
+          FacebookAuthProvider.getCredential(accessToken: myToken.token);
+      print(credential.toString());
+
+      FirebaseUser firebaseUser =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      print(firebaseUser.toString());
+      return firebaseUser.uid;
+    } else
+      return null;
   }
 }
