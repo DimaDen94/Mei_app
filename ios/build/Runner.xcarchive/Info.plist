@@ -9,7 +9,7 @@
 		<key>CFBundleIdentifier</key>
 		<string>com.dmitrydlj.meiApp</string>
 		<key>CFBundleShortVersionString</key>
-		<string>1.1.2</string>
+		<string>1.1.3</string>
 		<key>CFBundleVersion</key>
 		<string>3</string>
 		<key>SigningIdentity</key>
@@ -20,7 +20,7 @@
 	<key>ArchiveVersion</key>
 	<integer>2</integer>
 	<key>CreationDate</key>
-	<date>2019-09-04T05:33:11Z</date>
+	<date>2019-09-04T19:03:19Z</date>
 	<key>Name</key>
 	<string>Runner</string>
 	<key>SchemeName</key>
