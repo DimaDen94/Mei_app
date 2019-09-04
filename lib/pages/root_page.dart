@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mei_app/pages/login_signup_page.dart';
 import 'package:mei_app/services/authentication.dart';
 import 'package:mei_app/pages/home_page.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 class RootPage extends StatefulWidget {
   RootPage({this.auth});
 

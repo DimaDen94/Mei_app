@@ -4,10 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:mei_app/models/news_pre.dart';
 
 import 'dart:async';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
-import 'dart:developer';
 import 'package:html/dom.dart' as dom;
 
 class HomePage extends StatefulWidget {

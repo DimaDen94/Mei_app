@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mei_app/services/authentication.dart';
 import 'package:validators/validators.dart';
-import 'package:validators/sanitizers.dart';
 
 class LoginSignUpPage extends StatefulWidget {
   LoginSignUpPage({this.auth, this.onSignedIn});
